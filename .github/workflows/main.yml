@@ -1,0 +1,47 @@
+name: Deploy to SAP Cloud Foundry
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      - name: Install Cloud Foundry CLI
+        run: |
+          curl -sL "https://packages.cloudfoundry.org/stable?release=linux64-binary&source=github" | tar -zx
+          sudo mv cf /usr/local/bin
+          cf --version
+
+      - name: Install mbt
+        run: |
+          npm install -g mbt
+
+      - name: Install MTA Plugin
+        run: |
+          cf install-plugin -f https://github.com/cloudfoundry-incubator/multiapps-cli-plugin/releases/latest/download/multiapps-plugin.linux64
+
+      - name: Build MTA Archive
+        run: mbt build -t gen --mtar mta.tar
+
+      - name: Log into SAP Cloud Foundry
+        run: |
+          cf login -a ${{ secrets.CF_API_ENDPOINT }} \
+          -u ${{ secrets.CF_USERNAME }} \
+          -p ${{ secrets.CF_PASSWORD }} \
+          -o ${{ secrets.CF_ORGANIZATION }} \
+          -s ${{ secrets.CF_SPACE }}
+
+      - name: Deploy using MTA
+        run: cf deploy gen/mta.tar
