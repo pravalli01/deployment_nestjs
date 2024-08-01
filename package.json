@@ -1,0 +1,10 @@
+{
+  "name": "hellonodesy",
+  "version": "1.0.0",
+  "description": "A simple node project.",
+  "license": "UNLICENSED",
+  "dependencies": {},
+  "devDependencies": {
+    "@sap/cds-dk": "^7"
+  }
+}
