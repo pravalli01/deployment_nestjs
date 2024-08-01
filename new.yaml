@@ -1,13 +1,13 @@
 ---
 _schema-version: '3.1'
-ID: hellonodesy
+ID: pravallika
 version: 1.0.0
 description: "A simple node project."
 parameters:
   enable-parallel-deployments: true
 
 modules:
-  - name: hellonodesy
+  - name: pravallika
     type: nodejs
     path: hellonode
     parameters:
