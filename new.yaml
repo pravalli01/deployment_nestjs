@@ -1,0 +1,29 @@
+---
+_schema-version: '3.1'
+ID: hellonodesy
+version: 1.0.0
+description: "A simple node project."
+parameters:
+  enable-parallel-deployments: true
+
+modules:
+  - name: hellonodesy
+    type: nodejs
+    path: hellonode
+    parameters:
+      buildpack: nodejs_buildpack
+      keep-existing-routes: true
+      disk-quota: 256M
+      memory: 128M
+    build-parameters:
+      builder: npm
+      ignore:
+        - default-*.json
+        - "*cache*"
+        - "*node_modules*"
+        - package-lock.json
+    provides:
+      - name: srv-api # required by consumers of CAP services (e.g. approuter)
+        properties:
+          srv-url: ${default-url}
+    requires: []
