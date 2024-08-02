@@ -22,14 +22,16 @@ jobs:
         run: |
           curl -sL "https://packages.cloudfoundry.org/stable?release=linux64-binary&source=github" | tar -zx
           sudo mv cf /usr/local/bin
+          echo 'Cloud Foundry CLI installed'
+          export PATH=$PATH:/usr/local/bin
           cf --version
 
       - name: Install mbt
-        run: |
-          npm install -g mbt
+        run: npm install -g mbt
 
       - name: Install MTA Plugin
         run: |
+          export PATH=$PATH:/usr/local/bin
           cf install-plugin -f https://github.com/cloudfoundry-incubator/multiapps-cli-plugin/releases/latest/download/multiapps-plugin.linux64
 
       - name: Build MTA Archive
@@ -37,11 +39,12 @@ jobs:
 
       - name: Log into SAP Cloud Foundry
         run: |
-          cf login -a ${{ secrets.CF_API_ENDPOINT }} \
-          -u ${{ secrets.CF_USERNAME }} \
-          -p ${{ secrets.CF_PASSWORD }} \
-          -o ${{ secrets.CF_ORGANIZATION }} \
-          -s ${{ secrets.CF_SPACE }}
+          export PATH=$PATH:/usr/local/bin
+          cf api ${{ secrets.CF_API_ENDPOINT }}
+          cf auth ${{ secrets.CF_USERNAME }} ${{ secrets.CF_PASSWORD }}
+          cf target -o ${{ secrets.CF_ORGANIZATION }} -s ${{ secrets.CF_SPACE }}
 
       - name: Deploy using MTA
-        run: cf deploy gen/mta.tar
+        run: |
+          export PATH=$PATH:/usr/local/bin
+          cf deploy gen/mta.tar
