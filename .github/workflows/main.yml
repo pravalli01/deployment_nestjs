@@ -22,6 +22,7 @@ jobs:
         run: |
           curl -sL "https://packages.cloudfoundry.org/stable?release=linux64-binary&source=github" | tar -zx
           sudo mv cf /usr/local/bin
+          echo 'Cloud Foundry CLI installed'
           cf --version
 
       - name: Install mbt
