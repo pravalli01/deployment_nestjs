@@ -1,3 +1,4 @@
+
 name: Deploy to SAP Cloud Foundry
 
 on:
@@ -33,7 +34,7 @@ jobs:
           cf8 install-plugin -f https://github.com/cloudfoundry-incubator/multiapps-cli-plugin/releases/latest/download/multiapps-plugin.linux64
 
       - name: Build MTA Archive
-        run: mbt build -t gen --mtar new.tar
+        run: mbt build -t gen --mtar mta.tar
 
       - name: Log into SAP Cloud Foundry
         run: |
